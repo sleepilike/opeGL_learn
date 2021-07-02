@@ -29,11 +29,14 @@ class Triangle {
     //着色程序包含 OpenGL 着色语言 (GLSL) 代码，必须先对其进行编译，然后才能在 OpenGL ES 环境中使用
     //顶点着色程序
     private val vertexShaderCode =
+        "uniform mat4 uMVPMatrix;" +
         "attribute vec4 vPosition;" +
         "void main(){" +
-        "   gl_Position = vPosition;" +
+                // uMVPMatrix需要作为第一个因子
+        "   gl_Position = uMVPMatrix * vPosition;" +
         "}"
-
+    //用于访问和设置视图转换
+    private var vPMatrixHandle : Int =0
     //片段着色程序
     private val fragmentShaderCode =
         "precision mediump float;"+
@@ -86,6 +89,9 @@ class Triangle {
     //每个顶点的字节数
     private val vertexStride: Int = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
 
+    /**
+     * 比例不适配
+     */
     fun draw() {
         // Add program to OpenGL ES environment
         //　如果将program设置为0，表示使用固定功能管线。
@@ -133,6 +139,28 @@ class Triangle {
             // 如果启用，将访问通用顶点属性数组中的值，并在调用顶点数组命令（如glDrawArrays或glDrawElements）时用于呈现。
             GLES20.glDisableVertexAttribArray(it)
         }
+
+    }
+
+    /**
+     * 比例适配
+     * 传入变换矩阵
+     */
+    fun draw(mvpMatrix: FloatArray) { // pass in the calculated transformation matrix
+
+        // get handle to shape's transformation matrix
+        //获取着色器程序中，指定为attribute类型变量的id
+        vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
+
+        // Pass the projection and view transformation to the shader
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
+
+        // Draw the triangle
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
+
+        // Disable vertex array
+        GLES20.glDisableVertexAttribArray(positionHandle)
+        draw()
     }
 
     //编译着色程序
