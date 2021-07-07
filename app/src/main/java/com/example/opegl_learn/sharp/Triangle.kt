@@ -14,18 +14,20 @@ import java.nio.FloatBuffer
  */
 // number of coordinates per vertex in this array
 const val COORDS_PER_VERTEX = 3
-//为坐标定义浮点数的顶点数组
-//为了最大限度地提高工作效率，可以将这些坐标写入 ByteBuffer 中，它会传递到 OpenGL ES 图形管道进行处理。
-var triangleCoords = floatArrayOf(     // in counterclockwise order:
-    0.0f, 0.622008459f, 0.0f,      // top x,y,z
-    -0.5f, -0.311004243f, 0.0f,    // bottom left
-    0.5f, -0.311004243f, 0.0f      // bottom right
-)
+
+
 class Triangle {
 
     // Set color with red, green, blue and alpha (opacity) values
     val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 1.0f)
 
+    //为坐标定义浮点数的顶点数组
+    // 为了最大限度地提高工作效率，可以将这些坐标写入 ByteBuffer 中，它会传递到 OpenGL ES 图形管道进行处理。
+    var triangleCoords = floatArrayOf(     // in counterclockwise order:
+        0.0f, 0.622008459f, 0.0f,      // top x,y,z
+        -0.5f, -0.311004243f, 0.0f,    // bottom left
+        0.5f, -0.311004243f, 0.0f      // bottom right
+    )
     //着色程序包含 OpenGL 着色语言 (GLSL) 代码，必须先对其进行编译，然后才能在 OpenGL ES 环境中使用
     //顶点着色程序
     private val vertexShaderCode =
