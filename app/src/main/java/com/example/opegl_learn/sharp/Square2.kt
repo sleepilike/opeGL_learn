@@ -13,34 +13,20 @@ import java.nio.ShortBuffer
  */
 // number of coordinates per vertex in this array
 
-var squareCoords = floatArrayOf(
-    -0.5f,  0.5f, 0.0f,      // top left
-    -0.5f, -0.5f, 0.0f,      // bottom left
-    0.5f, -0.5f, 0.0f,      // bottom right
-    0.5f,  0.5f, 0.0f       // top right
-)
+
 class Square2 {
 
-    //绘制顶点的顺序
-    private val drawOrder = shortArrayOf(0,1,2,0,2,3);
+    private val SQUARE_COLOR_COORDS = floatArrayOf( //Order of coordinates: X, Y, Z, R,G,B,
+    -0.5f, 0.5f, 0.0f, 1f, 0f, 0f,  //  0.top left RED
+    -0.5f, -0.5f, 0.0f, 0f, 0f, 1f,  //  1.bottom right Blue
+    0.5f, 0.5f, 0.0f, 1f, 1f, 1f,  //  3.top right WHITE
+    0.5f, -0.5f, 0.0f, 0f, 1f, 0f)
 
-    // initialize vertex byte buffer for shape coordinates
-    private val vertexBuffer : FloatBuffer =
-        ByteBuffer.allocateDirect(squareCoords.size * 4).run {
-            order(ByteOrder.nativeOrder())
-            asFloatBuffer().apply {
-                put(squareCoords)
-                position(0)
-            }
-        }
+    private val COORDS_PER_VERTEX = 3
+    private val COORDS_PER_COLOR = 3
 
-    private val drawListBuffer : ShortBuffer =
-        ByteBuffer.allocateDirect(drawOrder.size * 2).run {
-            order(ByteOrder.nativeOrder())
-            asShortBuffer().apply {
-                put(drawOrder)
-                position(0)
-            }
-        }
+    private val TOTAL_COMPONENT_COUNT = COORDS_PER_COLOR+COORDS_PER_VERTEX
+    private val STRIDE = TOTAL_COMPONENT_COUNT * 4
+
 
 }

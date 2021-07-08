@@ -8,6 +8,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.lang.StringBuilder
+import javax.microedition.khronos.opengles.GL
 
 /**
  * Created by zyy on 2021/7/7
@@ -30,7 +31,12 @@ class GLUtil {
          */
         fun compileShaderCode(type:Int,shaderCode:String) : Int{
 
+            Log.d("TAG", "compileShaderCode: $shaderCode")
             //得到一个着色器的id 对id进行操作 it
+            GLES20.glCreateShader(type).also { shader ->
+                GLES20.glShaderSource(shader,shaderCode)
+                GLES20.glCompileShader(shader)
+            }
             GLES20.glCreateShader(type).also {
                 if(it != 0){
                     //0.上传代码
@@ -39,10 +45,10 @@ class GLUtil {
                     GLES20.glCompileShader(it)
 
                     //2.查询编译的状态 失败？
-                    var status = IntArray(2)
+                    var status = IntArray(1)
                     //调用getShaderIv ，传入GL_COMPILE_STATUS进行查询
                     GLES20.glGetShaderiv(it,GLES20.GL_COMPILE_STATUS,status,0)
-
+                    //Log.d("TAG", "compileShaderCode: "+status[0]);
                     //等于0 则表示失败
                     if(status[0] == 0){
                         //释放资源 即删除这个引用
@@ -61,15 +67,16 @@ class GLUtil {
          * 从assert 中读取ShaderCode
          */
         fun readRawShaderCode(context:Context,shaderCodeName:String) : String{
-            var body : StringBuilder = StringBuilder()
+            var body = StringBuilder()
             try {
 
                 context.assets.open(shaderCodeName).also { inputStream ->
                     BufferedReader(InputStreamReader(inputStream)).also {
-                        var line : String = it.readLine()
+                        var line = it.readLine()
                         while (line != null){
                             body.append(line)
                             body.append("\n")
+                            line = it.readLine()
                         }
                     }
                 }
@@ -77,6 +84,26 @@ class GLUtil {
                 e.printStackTrace()
             }
             return body.toString()
+        }
+
+        fun linkProgram(vertexShaderId : Int,fragmentShaderId : Int) :Int{
+
+            val programId = GLES20.glCreateProgram()
+
+            GLES20.glAttachShader(programId,vertexShaderId)
+            GLES20.glAttachShader(programId,fragmentShaderId)
+
+            GLES20.glLinkProgram(programId)
+
+            var status = IntArray(1)
+            GLES20.glGetProgramiv(programId,GLES20.GL_LINK_STATUS,status,0)
+              if(status[0] == 0){
+                  GLES20.glDeleteShader(programId)
+                  Log.d("TAG", "linkProgram: linkFailed")
+                  return 0
+              }
+
+            return programId
         }
     }
 }

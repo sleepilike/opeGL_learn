@@ -172,6 +172,11 @@ class Triangle {
         return GLES20.glCreateShader(type).also { shader ->
             GLES20.glShaderSource(shader,shaderCode)
             GLES20.glCompileShader(shader)
+
+            var status = IntArray(1)
+            //调用getShaderIv ，传入GL_COMPILE_STATUS进行查询
+            GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, status, 0)
+            Log.d("TAG", "compileShaderCode: " + status[0])
         }
     }
 }
