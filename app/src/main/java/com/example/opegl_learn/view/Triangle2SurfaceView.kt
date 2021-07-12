@@ -13,7 +13,7 @@ class Triangle2SurfaceView (context: Context)  : GLSurfaceView(context){
     private var renderer : Triangle2Render
 
     init {
-        setEGLContextClientVersion(2);
+        setEGLContextClientVersion(2)
         renderer =Triangle2Render(context)
         setRenderer(renderer);
 

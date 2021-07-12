@@ -43,7 +43,7 @@ class MyGLRender : GLSurfaceView.Renderer {
         Log.d("TAG", "onSurfaceCreated: 1")
         //初始化形状
         mTriangle = Triangle()
-        mSquare2 = Square2()
+       // mSquare2 = Square2()
 
 
     }

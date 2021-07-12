@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLU
 import android.opengl.Matrix
+import android.util.Log
 import com.example.opegl_learn.config.Config
 import com.example.opegl_learn.utils.GLUtil
 import java.nio.ByteBuffer
@@ -38,7 +39,7 @@ class Triangle2 (context: Context){
     //索引
     var aPosition : Int = 0;
     var uColor : Int = 0
-    var uMatrix : Int = 0
+    var uMatrix : Int = 0 //投影矩阵
 
     //在数组中，一个顶点需要3个来描述其位置，需要3个偏移量
     private val COORDS_PER_VERTEX = 3
@@ -82,6 +83,9 @@ class Triangle2 (context: Context){
         mProgramId = GLUtil.linkProgram(vertexShaderId,fragmentShaderId)
         //4.使用这个program
         GLES20.glUseProgram(mProgramId)
+        uMatrix = GLES20.glGetUniformLocation(mProgramId,Config.U_MATRIX)
+
+
     }
 
     fun draw(){
@@ -106,8 +110,8 @@ class Triangle2 (context: Context){
                 0
             )
         }
-        uMatrix = GLES20.glGetUniformLocation(mProgramId,Config.U_MATRIX)
 
+        Log.d(" ", "draw: $uMatrix")
         //一定要先显示上色，再绘制图形
         //否则会导致颜色在当前这一帧使用失败，要在下一帧才生效
         //开始绘制
@@ -132,6 +136,7 @@ class Triangle2 (context: Context){
             Matrix.orthoM(mProjectionMatrix,0,-1f,1f,-aspectRadio,aspectRadio,-1f,1f)
         }
         GLES20.glUniformMatrix4fv(uMatrix,1,false,mProjectionMatrix,0)
+        Log.d(" ", "change: $uMatrix")
     }
 
 
