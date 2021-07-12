@@ -12,5 +12,15 @@ class Config {
         const val A_POSITION = "aPosition"
         const val U_COLOR = "uColor"
         const val U_MATRIX = "uMatrix"
+
+
+        const val TEXTURE_VERTEX_SHADER = "shader/texture_vertex_shader.glsl"
+        const val TEXTURE_FRAGMENT_SHADER = "shader/texture_fragment_shader.glsl"
+
+        const val V_POSITION = "vPosition"
+        const val A_TEXCOORD = "a_texCoord"
+        const val U_MVPMATRIX = "uMVPMatrix"
+        const val S_TEXTURE = "s_texture"
+
     }
 }
